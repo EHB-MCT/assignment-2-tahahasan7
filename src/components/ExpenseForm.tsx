@@ -1,6 +1,10 @@
 import { PlusCircle } from "lucide-react";
 import React, { useState } from "react";
-import type { Category } from "../types";
+import type { Category, Expense } from "../types";
+
+type ExpenseFormProps = {
+  onAddExpense: (expense: Expense) => void;
+};
 
 const categories: Category[] = [
   "Food",
@@ -12,7 +16,7 @@ const categories: Category[] = [
   "Other",
 ];
 
-export function ExpenseForm() {
+export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<Category>("Food");
   const [description, setDescription] = useState("");
@@ -20,6 +24,15 @@ export function ExpenseForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const expense: Expense = {
+      id: crypto.randomUUID(),
+      amount: parseFloat(amount),
+      category,
+      description,
+      date: new Date().toISOString(),
+    };
+
+    onAddExpense(expense);
     setAmount("");
     setDescription("");
     setCategory("Food");
