@@ -1,5 +1,7 @@
+import React, { useState } from "react";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { LoginForm } from "./LoginForm";
+import { RegisterForm } from "./RegisterForm";
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -42,6 +44,12 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Register
             </button>
           </div>
+
+          {isLogin ? (
+            <LoginForm onClose={onClose} />
+          ) : (
+            <RegisterForm onClose={onClose} />
+          )}
         </div>
       </div>
     </div>

@@ -1,10 +1,16 @@
 import { UserCircle, Wallet } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 import { AuthModal } from "./auth/AuthModal";
 
 export function Navbar() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const user = null; // Replace this with actual user state or context
+  const { user, profile, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    // No need to set modal state here as the auth state change will trigger a re-render
+  };
 
   return (
     <header className="bg-white shadow">
@@ -16,14 +22,24 @@ export function Navbar() {
           </div>
 
           <div className="relative">
-            {user || null ? (
+            {user ? (
               <div className="flex items-center gap-3">
-                (
-                <img className="w-8 h-8 rounded-full" />
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.username || "Profile"}
+                    className="w-8 h-8 rounded-full"
+                  />
                 ) : (
-                <UserCircle className="w-8 h-8 text-gray-400" />)
-                <span className="text-sm text-gray-600"></span>
-                <button className="text-sm text-gray-600 hover:text-gray-900">
+                  <UserCircle className="w-8 h-8 text-gray-400" />
+                )}
+                <span className="text-sm text-gray-600">
+                  {profile?.username || user.email}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
                   Sign Out
                 </button>
               </div>
