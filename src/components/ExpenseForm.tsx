@@ -1,9 +1,14 @@
 import { PlusCircle } from "lucide-react";
 import React, { useState } from "react";
-import type { Category, Expense } from "../types";
+import type { Category, NewExpense } from "../types";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
+import { Input } from "./ui/Input";
+import { Select } from "./ui/Select";
 
 type ExpenseFormProps = {
-  onAddExpense: (expense: Expense) => void;
+  onAddExpense: (expense: NewExpense) => void;
+  isAuthenticated: boolean;
 };
 
 const categories: Category[] = [
@@ -16,7 +21,15 @@ const categories: Category[] = [
   "Other",
 ];
 
-export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
+const categoryOptions = categories.map((cat) => ({
+  value: cat,
+  label: cat,
+}));
+
+export function ExpenseForm({
+  onAddExpense,
+  isAuthenticated,
+}: ExpenseFormProps) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<Category>("Food");
   const [description, setDescription] = useState("");
@@ -24,8 +37,7 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const expense: Expense = {
-      id: crypto.randomUUID(),
+    const expense: NewExpense = {
       amount: parseFloat(amount),
       category,
       description,
@@ -39,74 +51,53 @@ export function ExpenseForm({ onAddExpense }: ExpenseFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 bg-white p-6 rounded-lg shadow-md"
-    >
-      <div>
-        <label
-          htmlFor="amount"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Amount ($)
-        </label>
-        <input
+    <Card>
+      <form onSubmit={handleSubmit} className="space-y-4 p-6">
+        {!isAuthenticated && (
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+            <div className="flex">
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">
+                  You are not signed in. Your expenses will not be saved.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <Input
           type="number"
-          id="amount"
+          label="Amount (€)"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
           min="0"
           step="0.01"
           required
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         />
-      </div>
 
-      <div>
-        <label
-          htmlFor="category"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Category
-        </label>
-        <select
-          id="category"
+        <Select
+          label="Category"
           value={category}
           onChange={(e) => setCategory(e.target.value as Category)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-      </div>
+          options={categoryOptions}
+        />
 
-      <div>
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Description
-        </label>
-        <input
+        <Input
           type="text"
-          id="description"
-          required
+          label="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          required
         />
-      </div>
 
-      <button
-        type="submit"
-        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-      >
-        <PlusCircle size={20} />
-        Add Expense
-      </button>
-    </form>
+        <Button
+          type="submit"
+          className="w-full flex items-center justify-center gap-2"
+        >
+          <PlusCircle size={20} />
+          Add Expense
+        </Button>
+      </form>
+    </Card>
   );
 }
