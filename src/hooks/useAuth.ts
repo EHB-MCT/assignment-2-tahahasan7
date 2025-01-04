@@ -1,7 +1,17 @@
+/**
+ * Authentication hook for managing user authentication state.
+ * Provides user authentication status, profile data, and authentication methods.
+ *
+ * @module hooks/useAuth
+ */
+
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
+/**
+ * User profile information from the database.
+ */
 type Profile = {
   id: string;
   username: string;
@@ -9,6 +19,15 @@ type Profile = {
   updated_at: string;
 };
 
+/**
+ * Custom hook for managing authentication state.
+ *
+ * @returns Object containing authentication state and methods
+ *   - user: Current authenticated user or null
+ *   - profile: User profile data or null
+ *   - loading: Boolean indicating if auth state is being loaded
+ *   - signOut: Function to sign out the current user
+ */
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -39,6 +58,11 @@ export function useAuth() {
     return () => subscription.unsubscribe();
   }, []);
 
+  /**
+   * Fetches user profile data from the database.
+   *
+   * @param userId - The ID of the user whose profile to fetch
+   */
   async function getProfile(userId: string) {
     try {
       const { data, error } = await supabase
@@ -58,12 +82,15 @@ export function useAuth() {
     }
   }
 
+  /**
+   * Signs out the current user.
+   * Clears local auth state and profile data.
+   */
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
 
-      // Clear local state
       setUser(null);
       setProfile(null);
     } catch (error) {

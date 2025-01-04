@@ -1,6 +1,20 @@
+/**
+ * Expense management module.
+ * Provides functions for CRUD operations on expenses.
+ *
+ * @module lib/expenses
+ */
+
 import type { Expense, NewExpense } from "../types";
 import { supabase } from "./supabase";
 
+/**
+ * Fetches all expenses for a specific user.
+ *
+ * @param userId - The ID of the user whose expenses to fetch
+ * @returns Promise resolving to an array of expenses
+ * @throws Will throw an error if the database query fails
+ */
 export async function fetchUserExpenses(userId: string): Promise<Expense[]> {
   const { data, error } = await supabase
     .from("expenses")
@@ -16,6 +30,14 @@ export async function fetchUserExpenses(userId: string): Promise<Expense[]> {
   return data || [];
 }
 
+/**
+ * Adds a new expense for a user.
+ *
+ * @param expense - The expense data to add
+ * @param userId - The ID of the user creating the expense
+ * @returns Promise resolving to the created expense
+ * @throws Will throw an error if the database insert fails
+ */
 export async function addExpense(
   expense: NewExpense,
   userId: string
@@ -42,6 +64,14 @@ export async function addExpense(
   return data;
 }
 
+/**
+ * Updates an existing expense.
+ *
+ * @param expense - The updated expense data
+ * @param userId - The ID of the user who owns the expense
+ * @returns Promise resolving to the updated expense
+ * @throws Will throw an error if the database update fails
+ */
 export async function updateExpense(
   expense: Expense,
   userId: string
@@ -67,6 +97,13 @@ export async function updateExpense(
   return data;
 }
 
+/**
+ * Deletes an expense.
+ *
+ * @param expenseId - The ID of the expense to delete
+ * @param userId - The ID of the user who owns the expense
+ * @throws Will throw an error if the database delete fails
+ */
 export async function deleteExpense(
   expenseId: string,
   userId: string
