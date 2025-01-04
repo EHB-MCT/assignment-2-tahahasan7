@@ -145,14 +145,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 ## 📚 References
 
-## Contact
-
-For questions, feedback, or contributions, feel free to reach out:
-
-- **Taha Hasan**
-  - **Email**: taha.hasan@student.ehb.be
-  - **GitHub**: [tahahasan7](https://github.com/tahahasan7)
-
 ### Official Documentation
 
 - [React Documentation](https://react.dev/)
@@ -179,3 +171,8 @@ For questions, feedback, or contributions, feel free to reach out:
 
 - [Commits](https://chatgpt.com/share/67794611-d050-8011-9bb0-f5de01bec02e)
 - [supabase extension and migration](https://chatgpt.com/share/6779471a-3734-8011-922a-956e6b3091db)
+
+## 👤 Taha Hasan
+
+- ✉️ **Email**: taha.hasan@student.ehb.be
+- 💻 **GitHub**: [tahahasan7](https://github.com/tahahasan7)
