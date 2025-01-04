@@ -82,7 +82,7 @@ Authentication is handled through Supabase Auth with:
 - User profiles
 - Session management
 
-See [Authentication Flow](docs/authentication-flow.md) for implementation details.
+See [Authentication Flow](docs/data-flow.md) for implementation details.
 
 ## 💾 Database Schema
 
@@ -125,9 +125,10 @@ For complete schema information, see [Database Schema](docs/database-schema.md).
 - [Architecture Overview](docs/architecture.md)
 - [Code Organization](docs/code-organization.md)
 - [Component Guidelines](docs/component-guidelines.md)
+- [Data Flow](docs/data-flow.md)
+- [Database Schema](docs/database-schema.md)
 - [Design Patterns](docs/design-patterns.md)
 - [State Management](docs/state-management.md)
-- [UI Components](docs/ui-components.md)
 
 ## 🤝 Contributing
 
