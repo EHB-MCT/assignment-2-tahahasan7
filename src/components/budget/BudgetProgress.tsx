@@ -1,9 +1,10 @@
 import { AlertTriangle, CheckCircle } from "lucide-react";
+import type { BudgetLimit } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
 
 type BudgetProgressProps = {
   spent: number;
-  limit: number;
+  limit: BudgetLimit;
   warningLevel: "none" | "warning" | "danger";
 };
 
@@ -12,7 +13,7 @@ export function BudgetProgress({
   limit,
   warningLevel,
 }: BudgetProgressProps) {
-  const percentage = Math.min((spent / limit) * 100, 100);
+  const percentage = Math.min((spent / limit.amount) * 100, 100);
 
   const barColors = {
     none: "bg-green-500",
@@ -30,7 +31,7 @@ export function BudgetProgress({
     <div className="mt-2">
       <div className="flex items-center justify-between mb-1">
         <div className="text-sm font-medium text-gray-700">
-          {formatCurrency(spent)} / {formatCurrency(limit)}
+          {formatCurrency(spent)} / {formatCurrency(limit.amount)}
         </div>
         <div
           className={`text-sm font-medium ${textColors[warningLevel]} flex items-center gap-1`}

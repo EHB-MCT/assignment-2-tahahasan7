@@ -1,25 +1,29 @@
 import { useState } from "react";
-import type { Category } from "../../types";
+import type { BudgetPeriod, Category, NewBudgetLimit } from "../../types";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 
 type BudgetLimitFormProps = {
+  onAddBudgetLimit: (budgetLimit: NewBudgetLimit) => void;
   existingCategories: Category[];
 };
 
-const periods = ["monthly", "yearly"];
+const periods: BudgetPeriod[] = ["monthly", "yearly"];
 
 const periodOptions = periods.map((period) => ({
   value: period,
   label: period.charAt(0).toUpperCase() + period.slice(1),
 }));
 
-export function BudgetLimitForm({ existingCategories }: BudgetLimitFormProps) {
+export function BudgetLimitForm({
+  onAddBudgetLimit,
+  existingCategories,
+}: BudgetLimitFormProps) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<Category>("Food");
-  const [period, setPeriod] = useState("monthly");
+  const [period, setPeriod] = useState<BudgetPeriod>("monthly");
 
   const categoryOptions = existingCategories.map((cat) => ({
     value: cat,
@@ -28,8 +32,17 @@ export function BudgetLimitForm({ existingCategories }: BudgetLimitFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission logic will be added later
-    console.log({ amount, category, period });
+
+    const budgetLimit: NewBudgetLimit = {
+      amount: parseFloat(amount),
+      category,
+      period,
+    };
+
+    onAddBudgetLimit(budgetLimit);
+    setAmount("");
+    setCategory("Food");
+    setPeriod("monthly");
   };
 
   return (
@@ -57,7 +70,7 @@ export function BudgetLimitForm({ existingCategories }: BudgetLimitFormProps) {
         <Select
           label="Period"
           value={period}
-          onChange={(e) => setPeriod(e.target.value)}
+          onChange={(e) => setPeriod(e.target.value as BudgetPeriod)}
           options={periodOptions}
         />
 

@@ -53,6 +53,8 @@ export function ExpenseForm({
   return (
     <Card>
       <form onSubmit={handleSubmit} className="space-y-4 p-6">
+        <h2 className="text-lg font-semibold mb-4">Add Expense</h2>
+
         {!isAuthenticated && (
           <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
             <div className="flex">
