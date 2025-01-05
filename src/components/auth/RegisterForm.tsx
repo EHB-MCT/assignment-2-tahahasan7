@@ -1,10 +1,28 @@
 import React, { useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
 
-type RegisterFormProps = {
+/**
+ * Props for the RegisterForm component.
+ * @typedef {Object} RegisterFormProps
+ * @property {Function} onClose - A function to call when the registration form is closed.
+ */
+interface RegisterFormProps {
   onClose: () => void;
-};
+}
 
+/**
+ * The RegisterForm component allows users to sign up by providing their
+ * email, password, and username. It handles the creation of a new user in
+ * Supabase, checks if the username is available, and creates a profile for
+ * the user after successful registration.
+ *
+ * @component
+ * @param {RegisterFormProps} props - The properties passed to the component.
+ * @param {Function} props.onClose - A function to call when the registration form is closed.
+ * @returns {JSX.Element} The rendered RegisterForm component.
+ */
 export function RegisterForm({ onClose }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,13 +30,21 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handles the form submission to register a new user.
+   * - Checks if the username already exists.
+   * - Registers the user with Supabase.
+   * - Creates a user profile in the "profiles" table.
+   * - Signs the user in after registration.
+   * @param {React.FormEvent} e - The form submit event.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      // Check if username is already taken
+      // Check if username exists
       const { data: existingUser, error: checkError } = await supabase
         .from("profiles")
         .select("username")
@@ -41,9 +67,7 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
         password,
       });
 
-      if (signUpError) {
-        throw signUpError;
-      }
+      if (signUpError) throw signUpError;
 
       if (data.user) {
         // Create profile
@@ -58,6 +82,15 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
         ]);
 
         if (profileError) throw profileError;
+
+        // Sign in the user immediately after registration
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+
+        if (signInError) throw signInError;
+
         onClose();
       }
     } catch (err: any) {
@@ -80,71 +113,40 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
         </div>
       )}
 
-      <div>
-        <label
-          htmlFor="username"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Username
-        </label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          required
-          minLength={3}
-          pattern="[a-zA-Z0-9_-]+"
-          title="Username can only contain letters, numbers, underscores, and hyphens"
-        />
-      </div>
+      <Input
+        type="text"
+        label="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+        minLength={3}
+        pattern="[a-zA-Z0-9_-]+"
+        title="Username can only contain letters, numbers, underscores, and hyphens"
+      />
 
-      <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          required
-        />
-      </div>
+      <Input
+        type="email"
+        label="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
 
-      <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Password
-        </label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          required
-          minLength={6}
-        />
-        <p className="mt-1 text-sm text-gray-500">
-          Password must be at least 6 characters long
-        </p>
-      </div>
+      <Input
+        type="password"
+        label="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        minLength={6}
+      />
+      <p className="mt-1 text-sm text-gray-500">
+        Password must be at least 6 characters long
+      </p>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-      >
+      <Button type="submit" isLoading={loading} className="w-full">
         {loading ? "Creating account..." : "Create Account"}
-      </button>
+      </Button>
     </form>
   );
 }

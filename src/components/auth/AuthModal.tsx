@@ -1,57 +1,69 @@
-import React, { useState } from "react";
-import { X } from "lucide-react";
+import { useState } from "react";
+import { Button } from "../ui/Button";
+import { Modal } from "../ui/Modal";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 
-type AuthModalProps = {
+/**
+ * Props for the AuthModal component.
+ *
+ * @typedef {Object} AuthModalProps
+ * @property {boolean} isOpen - Boolean that determines whether the modal is open.
+ * @property {Function} onClose - Callback function that will be triggered when the modal is closed.
+ */
+interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-};
+}
 
+/**
+ * AuthModal component that toggles between Login and Register forms within a modal.
+ * It allows users to either log in or register for an account.
+ *
+ * @component
+ * @param {AuthModalProps} props - The properties passed to the component.
+ * @param {boolean} props.isOpen - Boolean value that determines whether the modal is visible or not.
+ * @param {Function} props.onClose - Function that closes the modal when triggered.
+ * @returns {JSX.Element} The rendered AuthModal component.
+ */
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
+  // State to toggle between login and registration forms
   const [isLogin, setIsLogin] = useState(true);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg w-full max-w-md p-6 relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-        >
-          <X size={20} />
-        </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={isLogin ? "Login" : "Register"}
+    >
+      <div className="mb-6">
+        <div className="flex gap-4 mb-6">
+          {/* Button to switch to Login form */}
+          <Button
+            variant={isLogin ? "primary" : "ghost"}
+            onClick={() => setIsLogin(true)}
+            className="flex-1"
+          >
+            Login
+          </Button>
 
-        <div className="mb-6">
-          <div className="flex gap-4 mb-6">
-            <button
-              className={`flex-1 py-2 px-4 rounded-md ${
-                isLogin ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600"
-              }`}
-              onClick={() => setIsLogin(true)}
-            >
-              Login
-            </button>
-            <button
-              className={`flex-1 py-2 px-4 rounded-md ${
-                !isLogin
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600"
-              }`}
-              onClick={() => setIsLogin(false)}
-            >
-              Register
-            </button>
-          </div>
-
-          {isLogin ? (
-            <LoginForm onClose={onClose} />
-          ) : (
-            <RegisterForm onClose={onClose} />
-          )}
+          {/* Button to switch to Register form */}
+          <Button
+            variant={!isLogin ? "primary" : "ghost"}
+            onClick={() => setIsLogin(false)}
+            className="flex-1"
+          >
+            Register
+          </Button>
         </div>
+
+        {/* Conditionally render the Login or Register form */}
+        {isLogin ? (
+          <LoginForm onClose={onClose} />
+        ) : (
+          <RegisterForm onClose={onClose} />
+        )}
       </div>
-    </div>
+    </Modal>
   );
 }
