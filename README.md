@@ -1,6 +1,16 @@
 # Budget Tracker
 
-A modern expense tracking application built with React, TypeScript, and Supabase, following best practices and a component-based architecture.
+A modern expense tracking application built with React, TypeScript, and Supabase, following best practices and a feature-based architecture.
+
+## Features
+
+- 📊 Expense tracking with categories
+- 🔐 User authentication and profiles
+- 📅 Date-based expense filtering
+- 💰 Budget limits per category
+- 📱 Responsive design
+- 📊 Expense summaries and analytics
+- 💾 Local storage for non-authenticated users
 
 ## 🏗️ Architecture
 
@@ -54,11 +64,16 @@ The application follows a modern, component-based architecture with clear separa
 
 ```
 src/
-├── components/     # React components
-├── hooks/         # Custom React hooks
-├── lib/           # Core functionality
-├── types/         # TypeScript types
-└── utils/         # Utility functions
+├── components/       # React components
+│   ├── auth/        # Authentication components
+│   ├── budget/      # Budget management components
+│   ├── expense/     # Expense tracking components
+│   ├── navigation/  # Navigation components
+│   └── ui/          # Shared UI components
+├── hooks/           # Custom React hooks
+├── lib/            # Core functionality and API
+├── types/          # TypeScript type definitions
+└── utils/          # Utility functions
 ```
 
 See [Code Organization](docs/code-organization.md) for detailed structure information.

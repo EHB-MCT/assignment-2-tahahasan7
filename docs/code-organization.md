@@ -4,35 +4,60 @@
 
 ```
 src/
-├── components/          # React components
-│   ├── auth/           # Authentication-related components
-│   ├── expense/        # Expense-related components
-│   └── shared/         # Shared/common components
-├── hooks/              # Custom React hooks
-├── lib/                # Core functionality and API
-├── types/              # TypeScript type definitions
-└── utils/              # Utility functions
+├── components/       # React components
+│   ├── auth/        # Authentication components
+│   │   ├── AuthModal.tsx
+│   │   ├── LoginForm.tsx
+│   │   └── RegisterForm.tsx
+│   ├── budget/      # Budget management components
+│   │   ├── BudgetLimitForm.tsx
+│   │   ├── BudgetLimitList.tsx
+│   │   └── BudgetProgress.tsx
+│   ├── expense/     # Expense tracking components
+│   │   ├── ExpenseForm.tsx
+│   │   ├── ExpenseList.tsx
+│   │   └── ExpenseSummary.tsx
+│   ├── navigation/  # Navigation components
+│   │   └── Navbar.tsx
+│   └── ui/          # Shared UI components
+│       ├── Button.tsx
+│       ├── Card.tsx
+│       ├── Input.tsx
+│       ├── Modal.tsx
+│       └── Select.tsx
+├── hooks/           # Custom React hooks
+│   └── useAuth.ts
+├── lib/            # Core functionality and API
+│   ├── budgetLimits.ts
+│   ├── expenses.ts
+│   └── supabase.ts
+├── types/          # TypeScript type definitions
+│   └── index.ts
+└── utils/          # Utility functions
+    ├── budgetCalculations.ts
+    ├── cn.ts
+    └── formatters.ts
 ```
 
-## File Organization Principles
+## Component Organization
 
-### 1. Small, Focused Files
+### 1. Domain-based Organization
 
-- Each file has a single responsibility
-- Clear and descriptive file names
-- Related files grouped in directories
+- Components are organized by domain/feature
+- Clear separation between features
+- Easy to locate related components
 
 ### 2. Component Structure
 
 - One component per file
-- Co-located test files
-- Shared component logic in hooks
+- Clear and focused responsibilities
+- Consistent naming conventions
 
 ### 3. Code Splitting
 
 Components are split based on:
 
-- Functionality
+- Domain/Feature
 - Reusability
 - Complexity
 
@@ -42,20 +67,19 @@ Components are split based on:
 
   ```typescript
   ExpenseList.tsx;
-  AuthModal.tsx;
+  BudgetLimitForm.tsx;
   ```
 
 - Hooks: camelCase with 'use' prefix
 
   ```typescript
   useAuth.ts;
-  useExpenses.ts;
   ```
 
 - Utilities: camelCase
   ```typescript
   formatters.ts;
-  validators.ts;
+  budgetCalculations.ts;
   ```
 
 ### 5. Import Organization
