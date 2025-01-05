@@ -187,6 +187,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 - [Commits](https://chatgpt.com/share/67794611-d050-8011-9bb0-f5de01bec02e)
 - [supabase extension and migration](https://chatgpt.com/share/6779471a-3734-8011-922a-956e6b3091db)
+- [JSDoc](https://chatgpt.com/share/677a6f0c-cf5c-8011-8982-69e2b752ff55)
 
 ## 👤 Taha Hasan
 
