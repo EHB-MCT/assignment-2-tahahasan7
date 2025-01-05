@@ -5,6 +5,13 @@ import { Card } from "../ui/Card";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 
+/**
+ * Props for the BudgetLimitForm component.
+ *
+ * @typedef {Object} BudgetLimitFormProps
+ * @property {Function} onAddBudgetLimit - Callback function that will be triggered when a budget limit is successfully added.
+ * @property {Category[]} existingCategories - List of available categories for the budget limit.
+ */
 type BudgetLimitFormProps = {
   onAddBudgetLimit: (budgetLimit: NewBudgetLimit) => void;
   existingCategories: Category[];
@@ -17,6 +24,16 @@ const periodOptions = periods.map((period) => ({
   label: period.charAt(0).toUpperCase() + period.slice(1),
 }));
 
+/**
+ * BudgetLimitForm component allows users to set a budget limit by selecting an amount, category, and period.
+ * It communicates with the parent component to add the new budget limit.
+ *
+ * @component
+ * @param {BudgetLimitFormProps} props - The properties passed to the component.
+ * @param {Function} props.onAddBudgetLimit - Function that is triggered when the form is submitted with the new budget limit.
+ * @param {Category[]} props.existingCategories - The list of categories available for the budget limit.
+ * @returns {JSX.Element} The rendered BudgetLimitForm component.
+ */
 export function BudgetLimitForm({
   onAddBudgetLimit,
   existingCategories,

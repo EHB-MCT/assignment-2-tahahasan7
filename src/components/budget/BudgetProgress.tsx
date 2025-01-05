@@ -2,12 +2,31 @@ import { AlertTriangle, CheckCircle } from "lucide-react";
 import type { BudgetLimit } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
 
+/**
+ * Props for the BudgetProgress component.
+ * @typedef {Object} BudgetProgressProps
+ * @property {number} spent - The amount of money already spent in the category.
+ * @property {BudgetLimit} limit - The budget limit for the category.
+ * @property {"none" | "warning" | "danger"} warningLevel - The current warning level of the budget.
+ */
 type BudgetProgressProps = {
   spent: number;
   limit: BudgetLimit;
   warningLevel: "none" | "warning" | "danger";
 };
 
+/**
+ * The BudgetProgress component displays the progress of a budget limit.
+ * It shows how much has been spent, the current budget status (within limit, near limit, or over budget),
+ * and a progress bar indicating the percentage spent of the budget.
+ *
+ * @component
+ * @param {BudgetProgressProps} props - The properties passed to the component.
+ * @param {number} props.spent - The amount of money spent in the category.
+ * @param {BudgetLimit} props.limit - The budget limit for the category.
+ * @param {"none" | "warning" | "danger"} props.warningLevel - The warning level indicating how close the user is to exceeding the budget.
+ * @returns {JSX.Element} The rendered BudgetProgress component.
+ */
 export function BudgetProgress({
   spent,
   limit,

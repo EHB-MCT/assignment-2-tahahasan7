@@ -5,6 +5,14 @@ import { Input } from "../ui/Input";
 import { Modal } from "../ui/Modal";
 import { Select } from "../ui/Select";
 
+/**
+ * Props for the ExpenseModal component.
+ * @typedef {Object} ExpenseModalProps
+ * @property {Expense} expense - The expense object to edit.
+ * @property {boolean} isOpen - Indicates if the modal is open.
+ * @property {function} onClose - The function to call when the modal is closed.
+ * @property {function} onSave - The function to call when the expense is saved.
+ */
 type ExpenseModalProps = {
   expense: Expense;
   isOpen: boolean;
@@ -12,6 +20,11 @@ type ExpenseModalProps = {
   onSave: (expense: Expense) => void;
 };
 
+/**
+ * Categories for the expense types.
+ * @constant
+ * @type {Category[]}
+ */
 const categories: Category[] = [
   "Food",
   "Transport",
@@ -22,11 +35,29 @@ const categories: Category[] = [
   "Other",
 ];
 
+/**
+ * Category options for the Select component.
+ * @constant
+ * @type {Object[]}
+ */
 const categoryOptions = categories.map((cat) => ({
   value: cat,
   label: cat,
 }));
 
+/**
+ * The ExpenseModal component displays a modal for editing an expense.
+ * It includes input fields for amount, category, description, and date.
+ * On submission, the edited expense is passed to the onSave callback.
+ *
+ * @component
+ * @param {ExpenseModalProps} props - The properties passed to the component.
+ * @param {Expense} props.expense - The expense object to edit.
+ * @param {boolean} props.isOpen - Whether the modal is open.
+ * @param {function} props.onClose - The function to call when the modal is closed.
+ * @param {function} props.onSave - The function to call when the expense is saved.
+ * @returns {JSX.Element} The rendered ExpenseModal component.
+ */
 export function ExpenseModal({
   expense,
   isOpen,
@@ -38,6 +69,10 @@ export function ExpenseModal({
   const [description, setDescription] = useState(expense.description);
   const [date, setDate] = useState(expense.date.split("T")[0]);
 
+  /**
+   * Handles the form submission, calling the onSave callback with the updated expense.
+   * @param {React.FormEvent} e - The form submission event.
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave({

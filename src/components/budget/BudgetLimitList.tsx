@@ -9,6 +9,15 @@ import { Card } from "../ui/Card";
 import { BudgetLimitModal } from "./BudgetLimitModal";
 import { BudgetProgress } from "./BudgetProgress";
 
+/**
+ * Props for the BudgetLimitList component.
+ *
+ * @typedef {Object} BudgetLimitListProps
+ * @property {BudgetLimit[]} budgetLimits - The list of budget limits to display.
+ * @property {Expense[]} expenses - The list of expenses to calculate spending.
+ * @property {Function} onUpdateBudgetLimit - Callback function to update a budget limit.
+ * @property {Function} onDeleteBudgetLimit - Callback function to delete a budget limit.
+ */
 type BudgetLimitListProps = {
   budgetLimits: BudgetLimit[];
   expenses: Expense[];
@@ -16,6 +25,18 @@ type BudgetLimitListProps = {
   onDeleteBudgetLimit: (budgetLimitId: string) => void;
 };
 
+/**
+ * BudgetLimitList component displays a list of budget limits with options to edit or delete them.
+ * It also shows the progress of spending compared to each budget limit.
+ *
+ * @component
+ * @param {BudgetLimitListProps} props - The properties passed to the component.
+ * @param {BudgetLimit[]} props.budgetLimits - The list of budget limits to display.
+ * @param {Expense[]} props.expenses - The list of expenses to calculate spending.
+ * @param {Function} props.onUpdateBudgetLimit - Function to update a budget limit.
+ * @param {Function} props.onDeleteBudgetLimit - Function to delete a budget limit.
+ * @returns {JSX.Element} The rendered BudgetLimitList component.
+ */
 export function BudgetLimitList({
   budgetLimits,
   expenses,

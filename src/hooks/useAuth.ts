@@ -1,6 +1,6 @@
 /**
  * Authentication hook for managing user authentication state.
- * Provides user authentication status, profile data, and authentication methods.
+ * This hook provides user authentication status, profile data, and authentication methods.
  *
  * @module hooks/useAuth
  */
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 /**
- * User profile information from the database.
+ * User profile information fetched from the database.
  */
 type Profile = {
   id: string;
@@ -20,13 +20,15 @@ type Profile = {
 };
 
 /**
- * Custom hook for managing authentication state.
+ * Custom hook for managing user authentication state.
  *
- * @returns Object containing authentication state and methods
- *   - user: Current authenticated user or null
- *   - profile: User profile data or null
- *   - loading: Boolean indicating if auth state is being loaded
- *   - signOut: Function to sign out the current user
+ * Provides authentication status, profile data, and methods to handle authentication.
+ *
+ * @returns {Object} Authentication state and methods:
+ *   - user {User | null} Current authenticated user or null if not authenticated.
+ *   - profile {Profile | null} User profile data or null if not available.
+ *   - loading {boolean} Boolean indicating whether authentication state is being loaded.
+ *   - signOut {Function} Function to sign out the current user and clear auth state.
  */
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -34,7 +36,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    // Get initial session and set the user and profile accordingly
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -43,7 +45,7 @@ export function useAuth() {
       setLoading(false);
     });
 
-    // Listen for auth changes
+    // Listen for authentication state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -55,13 +57,15 @@ export function useAuth() {
       }
     });
 
+    // Cleanup subscription on component unmount
     return () => subscription.unsubscribe();
   }, []);
 
   /**
-   * Fetches user profile data from the database.
+   * Fetches user profile data from the database based on the user ID.
    *
-   * @param userId - The ID of the user whose profile to fetch
+   * @param {string} userId - The ID of the user whose profile to fetch.
+   * @returns {Promise<void>} Resolves once the profile data has been fetched and state updated.
    */
   async function getProfile(userId: string) {
     try {
@@ -83,8 +87,9 @@ export function useAuth() {
   }
 
   /**
-   * Signs out the current user.
-   * Clears local auth state and profile data.
+   * Signs out the current user and clears local authentication state.
+   *
+   * @returns {Promise<void>} Resolves once the user has been signed out and state has been cleared.
    */
   const signOut = async () => {
     try {

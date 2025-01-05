@@ -4,6 +4,14 @@ import type { Expense } from "../../types";
 import { formatCurrency, formatDate } from "../../utils/formatters";
 import { ExpenseModal } from "./ExpenseModal";
 
+/**
+ * Props for the ExpenseList component.
+ * @typedef {Object} ExpenseListProps
+ * @property {Expense[]} expenses - The list of expenses to display.
+ * @property {function} [onUpdateExpense] - The function to call when an expense is updated.
+ * @property {function} [onDeleteExpense] - The function to call when an expense is deleted.
+ * @property {boolean} isAuthenticated - Indicates if the user is authenticated.
+ */
 type ExpenseListProps = {
   expenses: Expense[];
   onUpdateExpense?: (expense: Expense) => void;
@@ -11,6 +19,18 @@ type ExpenseListProps = {
   isAuthenticated: boolean;
 };
 
+/**
+ * The ExpenseList component displays a list of expenses in a table format.
+ * It allows authenticated users to update or delete individual expenses.
+ *
+ * @component
+ * @param {ExpenseListProps} props - The properties passed to the component.
+ * @param {Expense[]} props.expenses - The list of expenses to display.
+ * @param {function} [props.onUpdateExpense] - The function to call when an expense is updated.
+ * @param {function} [props.onDeleteExpense] - The function to call when an expense is deleted.
+ * @param {boolean} props.isAuthenticated - Whether the user is authenticated.
+ * @returns {JSX.Element} The rendered ExpenseList component.
+ */
 export function ExpenseList({
   expenses,
   onUpdateExpense,

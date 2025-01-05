@@ -10,6 +10,10 @@ import type { BudgetLimit, Category, NewBudgetLimit } from "../../types";
 import { BudgetLimitForm } from "./BudgetLimitForm";
 import { BudgetLimitList } from "./BudgetLimitList";
 
+/**
+ * A list of available categories for budget limits.
+ * @type {Category[]}
+ */
 const categories: Category[] = [
   "Food",
   "Transport",
@@ -20,6 +24,11 @@ const categories: Category[] = [
   "Other",
 ];
 
+/**
+ * Props for the BudgetLimitSection component.
+ * @typedef {Object} BudgetLimitSectionProps
+ * @property {Array<{ id: string; description: string; category: Category; amount: number; date: string }>} expenses - The list of user expenses.
+ */
 type BudgetLimitSectionProps = {
   expenses: Array<{
     id: string;
@@ -30,6 +39,15 @@ type BudgetLimitSectionProps = {
   }>;
 };
 
+/**
+ * The BudgetLimitSection component displays the user's budget limits and expenses.
+ * It allows the user to add, update, and delete budget limits.
+ *
+ * @component
+ * @param {BudgetLimitSectionProps} props - The properties passed to the component.
+ * @param {Array} props.expenses - A list of expenses associated with the user.
+ * @returns {JSX.Element} The rendered BudgetLimitSection component.
+ */
 export function BudgetLimitSection({ expenses }: BudgetLimitSectionProps) {
   const [budgetLimits, setBudgetLimits] = useState<BudgetLimit[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +61,9 @@ export function BudgetLimitSection({ expenses }: BudgetLimitSectionProps) {
     }
   }, [user]);
 
+  /**
+   * Loads the user's budget limits from the database.
+   */
   const loadBudgetLimits = async () => {
     if (!user) return;
     try {
@@ -55,6 +76,11 @@ export function BudgetLimitSection({ expenses }: BudgetLimitSectionProps) {
     }
   };
 
+  /**
+   * Handles adding a new budget limit.
+   * Checks if a limit for the category and period already exists.
+   * @param {NewBudgetLimit} newBudgetLimit - The new budget limit to be added.
+   */
   const handleAddBudgetLimit = async (newBudgetLimit: NewBudgetLimit) => {
     if (!user) return;
 
@@ -82,6 +108,10 @@ export function BudgetLimitSection({ expenses }: BudgetLimitSectionProps) {
     }
   };
 
+  /**
+   * Handles updating an existing budget limit.
+   * @param {BudgetLimit} updatedLimit - The updated budget limit to be saved.
+   */
   const handleUpdateBudgetLimit = async (updatedLimit: BudgetLimit) => {
     if (!user) return;
 
@@ -97,6 +127,10 @@ export function BudgetLimitSection({ expenses }: BudgetLimitSectionProps) {
     }
   };
 
+  /**
+   * Handles deleting a budget limit.
+   * @param {string} budgetLimitId - The ID of the budget limit to be deleted.
+   */
   const handleDeleteBudgetLimit = async (budgetLimitId: string) => {
     if (!user) return;
 

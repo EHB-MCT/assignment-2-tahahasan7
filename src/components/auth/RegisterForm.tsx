@@ -3,10 +3,25 @@ import { supabase } from "../../lib/supabase";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 
-type RegisterFormProps = {
+/**
+ * Props for the RegisterForm component.
+ *
+ * @typedef {Object} RegisterFormProps
+ * @property {Function} onClose - Callback function that will be triggered when the form is successfully submitted.
+ */
+interface RegisterFormProps {
   onClose: () => void;
-};
+}
 
+/**
+ * RegisterForm component allows users to create a new account by entering a username, email, and password.
+ * It communicates with the Supabase backend to handle user registration and profile creation.
+ *
+ * @component
+ * @param {RegisterFormProps} props - The properties passed to the component.
+ * @param {Function} props.onClose - Function that is triggered when the user successfully registers and the form should close.
+ * @returns {JSX.Element} The rendered RegisterForm component.
+ */
 export function RegisterForm({ onClose }: RegisterFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

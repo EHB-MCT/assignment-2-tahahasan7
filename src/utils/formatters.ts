@@ -5,7 +5,8 @@
  */
 
 /**
- * Currency formatter instance for EUR
+ * Currency formatter instance for formatting values in EUR.
+ * Uses German locale ("de-DE") for formatting.
  */
 const currencyFormatter = new Intl.NumberFormat("de-DE", {
   style: "currency",
@@ -13,20 +14,20 @@ const currencyFormatter = new Intl.NumberFormat("de-DE", {
 });
 
 /**
- * Formats a number as a currency string in EUR.
+ * Formats a numeric value as a currency string in EUR.
  *
- * @param amount - The amount to format
- * @returns Formatted currency string (e.g., "123,45 €")
+ * @param {number} amount - The numeric amount to format.
+ * @returns {string} - The formatted currency string (e.g., "123,45 €").
  */
 export const formatCurrency = (amount: number): string => {
   return currencyFormatter.format(amount);
 };
 
 /**
- * Formats a date string into a human-readable format.
+ * Formats an ISO date string into a human-readable format.
  *
- * @param dateString - ISO date string to format
- * @returns Formatted date string (e.g., "Jan 1, 2024")
+ * @param {string} dateString - The ISO date string to format (e.g., "2024-01-01").
+ * @returns {string} - The formatted date string (e.g., "Jan 1, 2024").
  */
 export const formatDate = (dateString: string): string => {
   return new Intl.DateTimeFormat("en-US", {

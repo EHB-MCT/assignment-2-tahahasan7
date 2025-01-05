@@ -6,11 +6,20 @@ import { Card } from "../ui/Card";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 
+/**
+ * Props for the ExpenseForm component.
+ * @typedef {Object} ExpenseFormProps
+ * @property {function} onAddExpense - The function to call when an expense is added.
+ * @property {boolean} isAuthenticated - Indicates if the user is authenticated.
+ */
 type ExpenseFormProps = {
   onAddExpense: (expense: NewExpense) => void;
   isAuthenticated: boolean;
 };
 
+/**
+ * Available categories for the expense form.
+ */
 const categories: Category[] = [
   "Food",
   "Transport",
@@ -21,11 +30,25 @@ const categories: Category[] = [
   "Other",
 ];
 
+/**
+ * Options for the category dropdown, mapping each category to a label and value.
+ */
 const categoryOptions = categories.map((cat) => ({
   value: cat,
   label: cat,
 }));
 
+/**
+ * The ExpenseForm component allows users to input a new expense.
+ * It includes fields for the amount, category, and description of the expense,
+ * and calls `onAddExpense` when the form is submitted.
+ *
+ * @component
+ * @param {ExpenseFormProps} props - The properties passed to the component.
+ * @param {function} props.onAddExpense - The function to call when an expense is added.
+ * @param {boolean} props.isAuthenticated - Whether the user is authenticated.
+ * @returns {JSX.Element} The rendered ExpenseForm component.
+ */
 export function ExpenseForm({
   onAddExpense,
   isAuthenticated,
@@ -34,6 +57,13 @@ export function ExpenseForm({
   const [category, setCategory] = useState<Category>("Food");
   const [description, setDescription] = useState("");
 
+  /**
+   * Handles form submission.
+   * Validates the form and calls `onAddExpense` with the newly created expense.
+   * Clears the form fields after submission.
+   *
+   * @param {React.FormEvent} e - The form submission event.
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 

@@ -2,16 +2,37 @@ import { Calendar, DollarSign, TrendingUp } from "lucide-react";
 import type { Expense } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
 
+/**
+ * Props for the ExpenseSummary component.
+ * @typedef {Object} ExpenseSummaryProps
+ * @property {Expense[]} expenses - The list of expenses to summarize.
+ */
 type ExpenseSummaryProps = {
   expenses: Expense[];
 };
 
+/**
+ * The ExpenseSummary component displays a summary of the total expenses,
+ * expenses for the current month, and the average expense.
+ *
+ * It calculates:
+ * - Total expenses: Sum of all expenses.
+ * - This month: Sum of expenses that occurred in the current month.
+ * - Average expense: The average value of the expenses.
+ *
+ * @component
+ * @param {ExpenseSummaryProps} props - The properties passed to the component.
+ * @param {Expense[]} props.expenses - The list of expenses to summarize.
+ * @returns {JSX.Element} The rendered ExpenseSummary component.
+ */
 export function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
+  // Calculate the total expenses
   const totalExpenses = expenses.reduce(
     (sum, expense) => sum + expense.amount,
     0
   );
 
+  // Get today's date and filter expenses for the current month
   const today = new Date();
   const thisMonth = expenses.filter((expense) => {
     const expenseDate = new Date(expense.date);
@@ -21,11 +42,13 @@ export function ExpenseSummary({ expenses }: ExpenseSummaryProps) {
     );
   });
 
+  // Calculate the total expenses for this month
   const monthlyTotal = thisMonth.reduce(
     (sum, expense) => sum + expense.amount,
     0
   );
 
+  // Calculate the average expense
   const averageExpense =
     expenses.length > 0 ? totalExpenses / expenses.length : 0;
 

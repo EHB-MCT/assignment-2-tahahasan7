@@ -5,6 +5,15 @@ import { Input } from "../ui/Input";
 import { Modal } from "../ui/Modal";
 import { Select } from "../ui/Select";
 
+/**
+ * Props for the BudgetLimitModal component.
+ *
+ * @typedef {Object} BudgetLimitModalProps
+ * @property {BudgetLimit} budgetLimit - The current budget limit that needs to be edited.
+ * @property {boolean} isOpen - Determines whether the modal is open or closed.
+ * @property {Function} onClose - Callback function to close the modal.
+ * @property {Function} onSave - Callback function to save the updated budget limit.
+ */
 type BudgetLimitModalProps = {
   budgetLimit: BudgetLimit;
   isOpen: boolean;
@@ -19,6 +28,18 @@ const periodOptions = periods.map((period) => ({
   label: period.charAt(0).toUpperCase() + period.slice(1),
 }));
 
+/**
+ * BudgetLimitModal component is used for editing an existing budget limit.
+ * It allows the user to modify the amount and period for the budget limit.
+ *
+ * @component
+ * @param {BudgetLimitModalProps} props - The properties passed to the component.
+ * @param {BudgetLimit} props.budgetLimit - The current budget limit that needs to be edited.
+ * @param {boolean} props.isOpen - Determines whether the modal is open or closed.
+ * @param {Function} props.onClose - Callback function to close the modal.
+ * @param {Function} props.onSave - Callback function to save the updated budget limit.
+ * @returns {JSX.Element} The rendered BudgetLimitModal component.
+ */
 export function BudgetLimitModal({
   budgetLimit,
   isOpen,

@@ -6,6 +6,13 @@
 import type { BudgetLimit, NewBudgetLimit } from "../types";
 import { supabase } from "./supabase";
 
+/**
+ * Fetches all budget limits for a specific user, ordered by category.
+ *
+ * @param {string} userId - The ID of the user whose budget limits are to be fetched.
+ * @returns {Promise<BudgetLimit[]>} - A promise that resolves to an array of budget limits.
+ * @throws {Error} - Throws an error if the fetch operation fails.
+ */
 export async function fetchUserBudgetLimits(
   userId: string
 ): Promise<BudgetLimit[]> {
@@ -23,6 +30,14 @@ export async function fetchUserBudgetLimits(
   return data || [];
 }
 
+/**
+ * Adds a new budget limit for a specific user.
+ *
+ * @param {NewBudgetLimit} budgetLimit - The budget limit details to add.
+ * @param {string} userId - The ID of the user for whom the budget limit is being added.
+ * @returns {Promise<BudgetLimit>} - A promise that resolves to the created budget limit.
+ * @throws {Error} - Throws an error if the insert operation fails.
+ */
 export async function addBudgetLimit(
   budgetLimit: NewBudgetLimit,
   userId: string
@@ -41,6 +56,14 @@ export async function addBudgetLimit(
   return data;
 }
 
+/**
+ * Updates an existing budget limit for a specific user.
+ *
+ * @param {BudgetLimit} budgetLimit - The updated budget limit details.
+ * @param {string} userId - The ID of the user who owns the budget limit.
+ * @returns {Promise<BudgetLimit>} - A promise that resolves to the updated budget limit.
+ * @throws {Error} - Throws an error if the update operation fails.
+ */
 export async function updateBudgetLimit(
   budgetLimit: BudgetLimit,
   userId: string
@@ -64,6 +87,14 @@ export async function updateBudgetLimit(
   return data;
 }
 
+/**
+ * Deletes a budget limit for a specific user.
+ *
+ * @param {string} budgetLimitId - The ID of the budget limit to delete.
+ * @param {string} userId - The ID of the user who owns the budget limit.
+ * @returns {Promise<void>} - A promise that resolves when the budget limit is deleted.
+ * @throws {Error} - Throws an error if the delete operation fails.
+ */
 export async function deleteBudgetLimit(
   budgetLimitId: string,
   userId: string
