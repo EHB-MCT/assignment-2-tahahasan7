@@ -5,21 +5,22 @@ import { Input } from "../ui/Input";
 
 /**
  * Props for the RegisterForm component.
- *
  * @typedef {Object} RegisterFormProps
- * @property {Function} onClose - Callback function that will be triggered when the form is successfully submitted.
+ * @property {Function} onClose - A function to call when the registration form is closed.
  */
 interface RegisterFormProps {
   onClose: () => void;
 }
 
 /**
- * RegisterForm component allows users to create a new account by entering a username, email, and password.
- * It communicates with the Supabase backend to handle user registration and profile creation.
+ * The RegisterForm component allows users to sign up by providing their
+ * email, password, and username. It handles the creation of a new user in
+ * Supabase, checks if the username is available, and creates a profile for
+ * the user after successful registration.
  *
  * @component
  * @param {RegisterFormProps} props - The properties passed to the component.
- * @param {Function} props.onClose - Function that is triggered when the user successfully registers and the form should close.
+ * @param {Function} props.onClose - A function to call when the registration form is closed.
  * @returns {JSX.Element} The rendered RegisterForm component.
  */
 export function RegisterForm({ onClose }: RegisterFormProps) {
@@ -29,12 +30,21 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Handles the form submission to register a new user.
+   * - Checks if the username already exists.
+   * - Registers the user with Supabase.
+   * - Creates a user profile in the "profiles" table.
+   * - Signs the user in after registration.
+   * @param {React.FormEvent} e - The form submit event.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
+      // Check if username exists
       const { data: existingUser, error: checkError } = await supabase
         .from("profiles")
         .select("username")
@@ -51,16 +61,16 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
         return;
       }
 
+      // Sign up the user
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
       });
 
-      if (signUpError) {
-        throw signUpError;
-      }
+      if (signUpError) throw signUpError;
 
       if (data.user) {
+        // Create profile
         const { error: profileError } = await supabase.from("profiles").insert([
           {
             id: data.user.id,
@@ -72,6 +82,15 @@ export function RegisterForm({ onClose }: RegisterFormProps) {
         ]);
 
         if (profileError) throw profileError;
+
+        // Sign in the user immediately after registration
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+
+        if (signInError) throw signInError;
+
         onClose();
       }
     } catch (err: any) {
