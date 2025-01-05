@@ -1,17 +1,7 @@
-/**
- * Authentication hook for managing user authentication state.
- * This hook provides user authentication status, profile data, and authentication methods.
- *
- * @module hooks/useAuth
- */
-
 import { User } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-/**
- * User profile information fetched from the database.
- */
 type Profile = {
   id: string;
   username: string;
@@ -20,86 +10,159 @@ type Profile = {
 };
 
 /**
- * Custom hook for managing user authentication state.
+ * Custom hook to manage authentication and user profile state using Supabase.
  *
- * Provides authentication status, profile data, and methods to handle authentication.
- *
- * @returns {Object} Authentication state and methods:
- *   - user {User | null} Current authenticated user or null if not authenticated.
- *   - profile {Profile | null} User profile data or null if not available.
- *   - loading {boolean} Boolean indicating whether authentication state is being loaded.
- *   - signOut {Function} Function to sign out the current user and clear auth state.
+ * @returns {Object} Auth-related state and functions.
+ * @property {User | null} user - The current authenticated user, or null if not authenticated.
+ * @property {Profile | null} profile - The user's profile data, or null if not loaded.
+ * @property {boolean} loading - Indicates whether the authentication state is being initialized.
+ * @property {Function} signOut - Signs out the current user.
+ * @property {Function} refreshProfile - Refreshes the user's profile data.
  */
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const initializingAuth = useRef(true);
+  const profileFetchTimeout = useRef<NodeJS.Timeout>();
 
-  useEffect(() => {
-    // Get initial session and set the user and profile accordingly
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        getProfile(session.user.id);
-      }
-      setLoading(false);
-    });
+  /**
+   * Resets the user and profile states and clears any pending operations.
+   */
+  const resetState = () => {
+    setUser(null);
+    setProfile(null);
+    if (profileFetchTimeout.current) {
+      clearTimeout(profileFetchTimeout.current);
+    }
+  };
 
-    // Listen for authentication state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await getProfile(session.user.id);
-      } else {
+  /**
+   * Fetches and sets the user's profile data.
+   * Implements a debounce mechanism to avoid rapid API calls.
+   *
+   * @param {string} userId - The ID of the user whose profile is being fetched.
+   */
+  const fetchProfile = async (userId: string) => {
+    if (!userId) return;
+
+    if (profileFetchTimeout.current) {
+      clearTimeout(profileFetchTimeout.current);
+    }
+
+    profileFetchTimeout.current = setTimeout(async () => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single();
+
+        if (error) {
+          console.error("Profile fetch error:", error);
+          setProfile(null);
+        } else {
+          setProfile(data);
+        }
+      } catch (error) {
+        console.error("Unexpected error fetching profile:", error);
         setProfile(null);
       }
-    });
+    }, 100);
+  };
 
-    // Cleanup subscription on component unmount
-    return () => subscription.unsubscribe();
+  /**
+   * Initializes the authentication state by checking the current session.
+   */
+  useEffect(() => {
+    let mounted = true;
+
+    const setupAuth = async () => {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) throw error;
+
+        if (mounted) {
+          if (session?.user) {
+            setUser(session.user);
+            await fetchProfile(session.user.id);
+          } else {
+            resetState();
+          }
+        }
+      } catch (error) {
+        console.error("Error initializing authentication:", error);
+        resetState();
+      } finally {
+        if (mounted) {
+          setLoading(false);
+          initializingAuth.current = false;
+        }
+      }
+    };
+
+    setupAuth();
+
+    return () => {
+      mounted = false;
+      if (profileFetchTimeout.current) {
+        clearTimeout(profileFetchTimeout.current);
+      }
+    };
   }, []);
 
   /**
-   * Fetches user profile data from the database based on the user ID.
-   *
-   * @param {string} userId - The ID of the user whose profile to fetch.
-   * @returns {Promise<void>} Resolves once the profile data has been fetched and state updated.
+   * Subscribes to authentication state changes and updates the user and profile states accordingly.
    */
-  async function getProfile(userId: string) {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (initializingAuth.current) return;
 
-      if (!error && data) {
-        setProfile(data);
-      } else {
-        setProfile(null);
+      switch (event) {
+        case "SIGNED_IN":
+          if (session?.user) {
+            setUser(session.user);
+            await fetchProfile(session.user.id);
+          }
+          break;
+        case "SIGNED_OUT":
+          resetState();
+          break;
+        case "USER_UPDATED":
+          if (session?.user) {
+            setUser(session.user);
+          }
+          break;
+        default:
+          break;
       }
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      setProfile(null);
-    }
-  }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   /**
-   * Signs out the current user and clears local authentication state.
+   * Signs out the current user and resets authentication state.
    *
-   * @returns {Promise<void>} Resolves once the user has been signed out and state has been cleared.
+   * @async
+   * @throws {Error} If the sign-out operation fails.
    */
   const signOut = async () => {
     try {
+      resetState();
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-
-      setUser(null);
-      setProfile(null);
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error("Sign out error:", error);
+      throw error;
     }
   };
 
@@ -108,5 +171,6 @@ export function useAuth() {
     profile,
     loading,
     signOut,
+    refreshProfile: () => user && fetchProfile(user.id),
   };
 }
