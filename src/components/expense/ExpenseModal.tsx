@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import type { Category, Expense } from "../types";
-import { Button } from "./ui/Button";
-import { Input } from "./ui/Input";
-import { Modal } from "./ui/Modal";
-import { Select } from "./ui/Select";
+import type { Category, Expense } from "../../types";
+import { Button } from "../ui/Button";
+import { Input } from "../ui/Input";
+import { Modal } from "../ui/Modal";
+import { Select } from "../ui/Select";
 
 type ExpenseModalProps = {
   expense: Expense;

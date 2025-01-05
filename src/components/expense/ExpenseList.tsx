@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import type { Expense } from "../types";
-import { formatCurrency, formatDate } from "../utils/formatters";
+import type { Expense } from "../../types";
+import { formatCurrency, formatDate } from "../../utils/formatters";
 import { ExpenseModal } from "./ExpenseModal";
 
 type ExpenseListProps = {

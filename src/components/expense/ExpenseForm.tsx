@@ -1,10 +1,10 @@
 import { PlusCircle } from "lucide-react";
 import React, { useState } from "react";
-import type { Category, NewExpense } from "../types";
-import { Button } from "./ui/Button";
-import { Card } from "./ui/Card";
-import { Input } from "./ui/Input";
-import { Select } from "./ui/Select";
+import type { Category, NewExpense } from "../../types";
+import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Input } from "../ui/Input";
+import { Select } from "../ui/Select";
 
 type ExpenseFormProps = {
   onAddExpense: (expense: NewExpense) => void;

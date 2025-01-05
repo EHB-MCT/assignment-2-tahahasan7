@@ -1,7 +1,7 @@
 import { UserCircle, Wallet } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { AuthModal } from "./auth/AuthModal";
+import { useAuth } from "../../hooks/useAuth";
+import { AuthModal } from "../auth/AuthModal";
 
 export function Navbar() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);

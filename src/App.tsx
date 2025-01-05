@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ExpenseForm } from "./components/ExpenseForm";
-import { ExpenseList } from "./components/ExpenseList";
-import { ExpenseSummary } from "./components/ExpenseSummary";
-import { Navbar } from "./components/Navbar";
 import { BudgetLimitSection } from "./components/budget/BudgetLimitSection";
+import { ExpenseForm } from "./components/expense/ExpenseForm";
+import { ExpenseList } from "./components/expense/ExpenseList";
+import { ExpenseSummary } from "./components/expense/ExpenseSummary";
+import { Navbar } from "./components/navigation/Navbar";
 import { useAuth } from "./hooks/useAuth";
 import {
   addExpense,

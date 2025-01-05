@@ -1,6 +1,6 @@
 import { Calendar, DollarSign, TrendingUp } from "lucide-react";
-import type { Expense } from "../types";
-import { formatCurrency } from "../utils/formatters";
+import type { Expense } from "../../types";
+import { formatCurrency } from "../../utils/formatters";
 
 type ExpenseSummaryProps = {
   expenses: Expense[];
